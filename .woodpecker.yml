@@ -1,0 +1,21 @@
+labels:
+  backend: local
+
+platform: "linux/amd64"
+
+pipeline:
+  - name: setup attic
+    image: bash
+    commands:
+      - attic login lounge-rocks https://cache.lounge.rocks $ATTIC_KEY --set-default
+    secrets: [attic_key]
+
+  - name: build nixosConfigurations
+    image: bash
+    commands:
+      - nix build --print-out-paths
+
+  - name: push nixosConfigurations
+    image: bash
+    commands:
+      - attic push nix-cache result
