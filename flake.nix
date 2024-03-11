@@ -7,6 +7,8 @@
     ondsel-appimage-x86_64-linux.flake = false;
     ondsel-appimage-aarch64-linux.url = "https://github.com/Ondsel-Development/FreeCAD/releases/download/2024.1.0/Ondsel_ES_2024.1.0.35694-Linux-aarch64.AppImage";
     ondsel-appimage-aarch64-linux.flake = false;
+    ondsel-feedstock.url = "github:Ondsel-Development/freecad-feedstock";
+    ondsel-feedstock.flake = false;
   };
 
   outputs = { nixpkgs, ... }@inputs: {
@@ -14,13 +16,15 @@
       (system: {
         name = system;
         value = with import nixpkgs { inherit system; }; rec {
-          # ondsel = appimageTools.wrapType2 {
+
+          # ondsel-app = appimageTools.wrapType2 {
           #   name = "ondsel";
           #   src = inputs."ondsel-appimage-${system}";
           # };
+
           default = ondsel;
 
-          ondsel = pkgs.libsForQt5.callPackage ./odsel.nix {
+          ondsel = pkgs.libsForQt5.callPackage ./ondsel.nix {
             boost = python3Packages.boost;
             inherit (python3Packages)
               gitpython
