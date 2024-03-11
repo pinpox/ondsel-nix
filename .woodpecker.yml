@@ -1,21 +1,20 @@
 labels:
   backend: local
+  platform: linux/arm64
 
-platform: "linux/amd64"
-
-pipeline:
+steps:
   - name: setup attic
     image: bash
     commands:
       - attic login lounge-rocks https://cache.lounge.rocks $ATTIC_KEY --set-default
     secrets: [attic_key]
 
-  - name: build nixosConfigurations
+  - name: build ondsel
     image: bash
     commands:
-      - nix build --print-out-paths
+      - nix build -L --print-out-paths
 
-  - name: push nixosConfigurations
+  - name: push ondsel
     image: bash
     commands:
       - attic push nix-cache result
